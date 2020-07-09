@@ -4,6 +4,7 @@ import speech_recognition as sr
 # import words_to_num as wtn
 WTN = WordsToNumbers()
 
+#pinnyskenis
 interpretation_dictionary = {
     "multiply": "*",
     "multiplies": "*",
