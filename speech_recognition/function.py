@@ -1,9 +1,16 @@
-class donkey():
+class dog():
     def init(self):
         pass
     def foo(self):
         pass
-class monkey():
+def the():
+    pass
++class clown():
+    def init(self):
+        pass
+    def foo(self):
+        pass
+class the():
     def init(self):
         pass
     def foo(self):

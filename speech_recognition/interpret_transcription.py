@@ -44,10 +44,10 @@ def get_string_purpose(transcript):
     print(f"transcript = {transcript}")
     function_has_purpose, function_purpose = get_function_purpose(transcript)
     make_function = any(['make','a', 'function'] == transcript[i:i+3] for i in range(len(transcript) - 1))
-    delete_lines = any(['delete','lines'] == transcript[i:i+2] for i in range(len(transcript) - 1))
+    delete_lines = any(['pop','lines'] == transcript[i:i+2] for i in range(len(transcript) - 1))
     make_class = any(['make','a', 'class'] == transcript[i:i+3] for i in range(len(transcript) - 1))
     delete_line = any(['delete','line'] == transcript[i:i+2] for i in range(len(transcript) - 1))
-    print(f"make function = {make_function}, delete_lines = {delete_lines}, {delete_line}")
+    print(f"make function = {make_function}\ndelete_lines = {delete_lines}, {delete_line}\nmake class = {make_class}")
     if make_function and function_has_purpose:
         name = get_name(transcript)
         fc.write_function_to_file(name, function_purpose, transcript)
@@ -67,16 +67,12 @@ class functionCreator():
 
     def create_function(self, name, is_purpose):
         if is_purpose == False:
-            return f"""
-def {name}():
-    pass\n
-"""
+            return f"""def {name}():
+    pass\n"""
         else:
             purpose = self.get_function_purpose()
-            return f"""
-def {name}():
-    {purpose}\n
-"""
+            return f"""def {name}():
+    {purpose}\n"""
 
     def write_function_to_file(self, name, purpose, transcript):
         location_specified, index = at_location(transcript)
@@ -94,19 +90,25 @@ class classCreator():
     def init(self):
         self.file = 'function.py'
 
-    def get_additional_variables(self):
+    def get_additional_variables(self, transcript):
         pass
+
+    def get_additional_functions(self, transcript):
+        pass
+
     def create_class(self, name, additional_functions, additional_variables):
+        additional_variables = False
+        additional_functions = False
         if additional_functions == False:
             if additional_variables == False:
                 return f"""class {name}():
     def init(self):
         pass
     def foo(self):
-        pass
+        pass\n
 """
             else:
-                vars = self.get_additional_variables()
+                # variables = self.get_additional_variables()
                 return f"""class {name}():
     def init(self):
         pass
@@ -115,13 +117,15 @@ class classCreator():
 """
 
     def write_class_to_file(self, name, purpose, transcript):
+        additional_variables = self.get_additional_variables(transcript)
+        additional_functions = self.get_additional_functions(transcript)
         location_specified, index = at_location(transcript)
         with open('function.py', 'r') as file:
             data = file.readlines()
         if location_specified:
-            data.insert(int(index)-1, self.create_class(name, False, False))
+            data.insert(int(index)-1, self.create_class(name, additional_functions, additional_variables))
         else:
-            data.append(self.create_class(name, False, False))
+            data.append(self.create_class(name, additional_functions, additional_variables))
         with open('function.py', 'w') as file:
             file.writelines(data)
 
