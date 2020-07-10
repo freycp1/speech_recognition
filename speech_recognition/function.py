@@ -1,17 +1,15 @@
-class dog():
-    def init(self):
-        pass
-    def foo(self):
-        pass
-def the():
+def clown():
     pass
-+class clown():
-    def init(self):
-        pass
-    def foo(self):
-        pass
-class the():
-    def init(self):
-        pass
-    def foo(self):
-        pass
+def low():
+    pass
+def money():
+    pass
+#print(f"woah")
+#print(f"woah")
+#print(f"woah")
+#print(f"woah")
+#print(f"woah")
+#print(f"woah")
+#print(f"woah")
+
+hello = "woah"

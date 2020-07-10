@@ -6,6 +6,7 @@
 # recordings to the queue, and the websocket client would be sending the
 # recordings to the speech to text service
 
+# from typing_extensions import final
 import pyaudio
 from ibm_watson import SpeechToTextV1
 from ibm_watson.websocket import RecognizeCallback, AudioSource
@@ -38,20 +39,26 @@ audio_source = AudioSource(q, True, True)
 # initialize speech to text service
 authenticator = IAMAuthenticator('mNhCryPvBiHqGE-OdDhYLWmAd67EpPZvARR_MYqGh2sc')
 speech_to_text = SpeechToTextV1(authenticator=authenticator)
-
 # define callback for the speech to text service
+
 class MyRecognizeCallback(RecognizeCallback):
     def __init__(self):
         RecognizeCallback.__init__(self)
-
+        self.sleep = False
     def on_transcription(self, transcript):
-        print(transcript)
-        print("am i printing the transcript too?")
-        print(f"transcript = {transcript}")
-        print(f"FINAL TRANSCRIPT = {transcript[0]['transcript']}")
         final_transcript = transcript[0]['transcript']
+        if final_transcript == 'stop ':
+            print("Listening Paused...")
+            self.sleep = True
+        if final_transcript == 'start ':
+            print("Listening Resumed")
+            self.sleep = False
         final_transcript = final_transcript.split(' ')
-        tm.get_string_purpose(final_transcript)
+        if not self.sleep:
+            print(f"FINAL TRANSCRIPT = {transcript[0]['transcript']}")
+            tm.get_string_purpose(final_transcript)
+        else:
+            pass
     def on_connected(self):
         print('Connection was successful')
 
@@ -65,14 +72,16 @@ class MyRecognizeCallback(RecognizeCallback):
         print('Service is listening')
 
     def on_hypothesis(self, hypothesis):
-        print(hypothesis)
+        # print(hypothesis)
         # print(f"hypothesis = {hypothesis}")
+        pass
     def on_data(self, data):
-        print(data)
+        # print(data)
         # print("I am printing data right now!")
         # print(f"data = {data}")
         # results_final = data['results'][0]['final']
         # print(f"data['results'][0]['final'] = {results_final}")
+        pass
     def on_close(self):
         print("Connection closed")
 
